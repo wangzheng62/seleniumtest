@@ -8,49 +8,30 @@ from selenium.webdriver.common.by import By
 
 from time import sleep
 chrome_options = Options()
-#chrome_options.add_argument("--headless")
-#chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
 #chrome_options.add_argument(r'--user-data-dir=G:\Users\36357\AppData\Local\Google\Chrome\User Data')
 #chrome_options.add_argument(r'user-agent="Mozilla/5.0 (Linux; U; Android 8.0.0; zh-CN; MHA-AL00 Build/HUAWEIMHA-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/12.1.4.994 Mobile Safari/537.36"')
 chromedriver = r"G:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
 driver = webdriver.Chrome(chromedriver,chrome_options=chrome_options)
-driver.get(r"https://www.douyu.com/")
+driver.get(r"http://www.xinyushuwu.com/4/4834/")
 #assert "Python" in driver.title
-print(driver.current_url)
-print(driver.page_source)
-sleep(10)
+elems=driver.find_elements_by_xpath('//div[@class="ml_list"]/ul/li/a')
 
+path=r"F:/新建文件夹 (2)/文本/"
+urls=[]
+for e in elems:
+    url=e.get_attribute('href')
+    urls.append(url)
 
-print(driver.current_url)
-print(driver.page_source)
-elem = driver.find_element_by_class_name("Search-text")
-elem.clear()
-elem.send_keys('牛叔')
-elem.send_keys(Keys.RETURN)
-#
-actions=ActionChains(driver)
-actions.move_to_element(elem)
-actions.click(elem)
-actions.perform()
+for url in  urls:
+    driver.get(url)
+    title=driver.title
+    content=driver.find_element_by_id('articlecontent').text
+    with open(path+'{}.txt'.format(title),'w') as f:
+        f.write(content)
+driver.close()
 
-sleep(10)
-print(driver.current_url)
-print(driver.page_source)
-
-elems=driver.find_elements_by_class_name('Search-anchor-info')
-print(elems)
-elem1=elems[0]
-actions=ActionChains(driver)
-actions.move_to_element(elem1)
-actions.click(elem1)
-actions.perform()
-actions.reset_actions()
-
-elem2 = WebDriverWait(driver,100).until(EC.element_to_be_clickable((By.XPATH,'//div[@class="SearchResultAllAnchor-show"]/div[1]')))
-actions.move_to_element(elem2)
-actions.click(elem2)
-actions.perform()
-actions.reset_actions()
 
 
 #elem.clear()
