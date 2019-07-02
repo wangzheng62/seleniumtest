@@ -16,4 +16,5 @@ if __name__=='__main__':
     u2=r'https://www.google.com/flights#flt=LAX.LHR,LGW,CDG,ORY,ARN.2019-09-05*BCN,MAD,FRA,GVA,FCO.LAX.2019-09-24;c:USD;e:1;so:1;sd:1;t:f;tt:m'
     driver.get(u2)
     elems=driver.find_elements_by_xpath('//div[@jstcache="8766"]')
-    print(len(elems))
+    elems1=driver.find_elements_by_class_name('gws-flights__footer-picker-value')
+    print(len(elems1))
