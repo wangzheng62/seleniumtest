@@ -22,7 +22,7 @@ if __name__=='__main__':
     with open('2.html','w') as f:
         f.write(driver.page_source)
     sleep(10)
-    with open('1.html','w') as f:
+    with open('3.html','w') as f:
         f.write(driver.page_source)
     '''
     try:
