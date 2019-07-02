@@ -15,4 +15,5 @@ if __name__=='__main__':
     u1=r'http://www.w3school.com.cn/xpath/xpath_syntax.asp'
     u2=r'https://www.google.com/flights#flt=LAX.LHR,LGW,CDG,ORY,ARN.2019-09-05*BCN,MAD,FRA,GVA,FCO.LAX.2019-09-24;c:USD;e:1;so:1;sd:1;t:f;tt:m'
     driver.get(u2)
-    print(driver.page_source)
+    elems=driver.find_elements_by_xpath('//div[@jstcache="8766"]')
+    print(len(elems))
