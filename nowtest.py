@@ -18,3 +18,5 @@ if __name__=='__main__':
     elems=driver.find_elements_by_xpath('//div[@jstcache="8766"]')
     elems1=driver.find_elements_by_class_name('gws-flights__footer-picker-value')
     print(len(elems1))
+    for e in elems1:
+        print(e.text)
