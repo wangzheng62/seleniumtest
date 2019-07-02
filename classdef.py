@@ -17,8 +17,7 @@ class Job():
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
-        chromedriver = r"G:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
-        self.driver = webdriver.Chrome(chromedriver, chrome_options=chrome_options)
+        self.driver = webdriver.Chrome(chrome_options=chrome_options)
     def __del__(self):
         self.driver.close()
 
