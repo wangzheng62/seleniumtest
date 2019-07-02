@@ -1,60 +1,52 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
-from time import sleep
-chrome_options = Options()
-#chrome_options.add_argument("--headless")
-#chrome_options.add_argument("--disable-gpu")
-#chrome_options.add_argument(r'--user-data-dir=G:\Users\36357\AppData\Local\Google\Chrome\User Data')
-#chrome_options.add_argument(r'user-agent="Mozilla/5.0 (Linux; U; Android 8.0.0; zh-CN; MHA-AL00 Build/HUAWEIMHA-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/12.1.4.994 Mobile Safari/537.36"')
-chromedriver = r"G:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe"
-driver = webdriver.Chrome(chromedriver,chrome_options=chrome_options)
-driver.get(r"https://www.douyu.com/")
-#assert "Python" in driver.title
-print(driver.current_url)
-print(driver.page_source)
-sleep(10)
+import re,numpy,os
 
 
-print(driver.current_url)
-print(driver.page_source)
-elem = driver.find_element_by_class_name("Search-text")
-elem.clear()
-elem.send_keys('牛叔')
-elem.send_keys(Keys.RETURN)
-#
-actions=ActionChains(driver)
-actions.move_to_element(elem)
-actions.click(elem)
-actions.perform()
+def ma(s):
+    pattern = r'[\u4e00-\u9fa5]'
+    p = re.compile(pattern)
+    l = p.findall(s)
+    return l
+def hhh(f):
+    with open(f,'rb') as f:
+        bs=f.read()
+        try:
+            s=bs.decode(encoding='utf8')
+        except:
+            s=bs.decode(encoding='gbk')
+        #s=bs.decode(encoding='gbk',errors='ignore')
+        l=ma(s)
+        print(len(l))
+        #print(l)
+        res={'char':[],'num':[]}
+        for c in l:
+            if c not in res['char']:
+                res['char'].append(c)
+                res['num'].append(1)
+            else:
+                i=res['char'].index(c)
+                res['num'][i]=res['num'][i]+1
+        #print(res)
+        ll=[res['char'],res['num']]
+        for index,n in enumerate(ll[1]):
+            ll[1][index]='{:0>4}'.format(n)
+        a=numpy.asarray(ll)
 
-sleep(10)
-print(driver.current_url)
-print(driver.page_source)
 
-elems=driver.find_elements_by_class_name('Search-anchor-info')
-print(elems)
-elem1=elems[0]
-actions=ActionChains(driver)
-actions.move_to_element(elem1)
-actions.click(elem1)
-actions.perform()
-actions.reset_actions()
+        b=a.argsort(axis=1)
 
-elem2 = WebDriverWait(driver,100).until(EC.element_to_be_clickable((By.XPATH,'//div[@class="SearchResultAllAnchor-show"]/div[1]')))
-actions.move_to_element(elem2)
-actions.click(elem2)
-actions.perform()
-actions.reset_actions()
-
-
-#elem.clear()
-#elem.send_keys("pycon")
-#elem.send_keys(Keys.RETURN)
-#assert "No results found." not in driver.page_source
-#driver.close()
+        c=[[],[]]
+        for index in b[1]:
+            c[0].append(ll[0][index])
+            c[1].append(ll[1][index])
+        d=numpy.asarray(c)
+        print(c[0][-50:])
+        print(c[1][-50:])
+if __name__=='__main__':
+    path=r'F:/新建文件夹 (2)/文本/cooked/s/'
+    l=os.walk(path)
+    os.chdir(path)
+    for fs in l:
+        print(fs)
+        os.chdir(fs[0])
+        for f in fs[2]:
+            hhh(f)

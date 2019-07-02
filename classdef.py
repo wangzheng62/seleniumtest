@@ -22,6 +22,10 @@ class Job():
     def __del__(self):
         self.driver.close()
 
+    def source(self,page):
+        self.driver.get(page)
+        return self.driver.page_source
+
 
     def out(self,page,obj):
         d={}
