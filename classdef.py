@@ -20,6 +20,7 @@ class Job():
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
     def __del__(self):
         self.driver.close()
+        self.driver.quit()
 
     def source(self,page):
         self.driver.get(page)
@@ -31,6 +32,7 @@ class Job():
         self.driver.get(page)
         for key in obj.__dict__:
             if isinstance(obj.__dict__[key],Field):
+                ss= WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH, obj.__dict__[key].xpath)))
                 elems=self.driver.find_elements_by_xpath(obj.__dict__[key].xpath)
                 tmp=[]
                 for elem in elems:
