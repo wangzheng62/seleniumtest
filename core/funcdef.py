@@ -11,3 +11,9 @@ def savexls(l,filename):
             tmp.append(s)
         ws.append(tmp)
     wb.save('{}.xlsx'.format(filename))
+import json
+def savejson(l,filename):
+    # [{},{},{},{}]
+    with open("{}.json",'a',encoding='utf8') as f:
+        for d in l:
+            f.write(json.dumps(d))
