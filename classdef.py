@@ -9,7 +9,7 @@ from json import dumps
 import os,re,random
 
 class Field():
-    def __init__(self,xpath=None,data=None):
+    def __init__(self,xpath,data='text'):
         self.xpath=xpath
         self.data=data
 class Job():
@@ -26,25 +26,43 @@ class Job():
         self.driver.get(page)
         return self.driver.page_source
 
-
+    #get data in page
+    #{'':[],'':[]}
+    #[{},{},{},{}]
     def out(self,page,obj):
-        d={}
         self.driver.get(page)
-        for key in obj.__dict__:
-            if isinstance(obj.__dict__[key],Field):
-                ss= WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH, obj.__dict__[key].xpath)))
-                elems=self.driver.find_elements_by_xpath(obj.__dict__[key].xpath)
-                tmp=[]
-                for elem in elems:
-                    if obj.__dict__[key].data=='text':
-                        res=elem.text
-                        #print(res)
-                    else:
-                        res=elem.get_attribute(obj.__dict__[key].data)
-                    #print('{}:{}'.format(key,res))
-                    tmp.append(res)
-                d[key]=tmp
-        return d
+        if 'wrap' in obj.__dict__:
+            #get the wrap of data
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH, obj.__dict__['wrap'].xpath)))
+            wraps=self.driver.find_elements_by_xpath(obj.__dict__['wrap'].xpath)
+            print(len(wraps))
+            res=[]
+            i=1
+            while(i<=len(wraps)):
+                datadict={}
+                wrappath=obj.__dict__['wrap'].xpath+'[{}]'.format(i)
+                #print(wrappath)
+                for key in obj.__dict__:
+                    if key!='wrap':
+
+                        if isinstance(obj.__dict__[key],Field):
+                            elems=self.driver.find_elements_by_xpath(wrappath+obj.__dict__[key].xpath)
+                            tmp=[]
+                            for elem in elems:
+                                if obj.__dict__[key].data == 'text':
+                                    data = elem.text
+                                    # print(res)
+                                else:
+                                    data = elem.get_attribute(obj.__dict__[key].data)
+                                tmp.append(data)
+                        #print(tmp)
+                            datadict[key]=tmp
+                #print(datadict)
+                res.append(datadict)
+                i=i+1
+        else:
+            pass
+        return res
 
 
     def save(self):
@@ -158,3 +176,7 @@ if __name__=='__main__':
     #dd(dir1)
 
     j1.driver.quit()
+
+
+
+
