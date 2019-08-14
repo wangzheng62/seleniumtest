@@ -19,29 +19,31 @@ class Job():
         chrome_options.add_argument("--disable-gpu")
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
     def __del__(self):
-        self.driver.close()
-        self.driver.quit()
+        try:
+            self.driver.close()
+            self.driver.quit()
+        except:
+            pass
 
     def source(self,page):
         self.driver.get(page)
         return self.driver.page_source
 
     #get data in page
-    #{'':[],'':[]}
     #[{},{},{},{}]
     def out(self,page,obj):
         self.driver.get(page)
+        res = []
         if 'wrap' in obj.__dict__:
             #get the wrap of data
             WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH, obj.__dict__['wrap'].xpath)))
             wraps=self.driver.find_elements_by_xpath(obj.__dict__['wrap'].xpath)
             print(len(wraps))
-            res=[]
             i=1
             while(i<=len(wraps)):
                 datadict={}
                 wrappath=obj.__dict__['wrap'].xpath+'[{}]'.format(i)
-                #print(wrappath)
+
                 for key in obj.__dict__:
                     if key!='wrap':
 
@@ -51,24 +53,36 @@ class Job():
                             for elem in elems:
                                 if obj.__dict__[key].data == 'text':
                                     data = elem.text
-                                    # print(res)
+
                                 else:
                                     data = elem.get_attribute(obj.__dict__[key].data)
                                 tmp.append(data)
-                        #print(tmp)
+
                             datadict[key]=tmp
-                #print(datadict)
+
                 res.append(datadict)
                 i=i+1
         else:
-            pass
+            datadict = {}
+            for key in obj.__dict__:
+                if isinstance(obj.__dict__[key], Field):
+                    WebDriverWait(self.driver, 30).until(
+                        EC.presence_of_element_located((By.XPATH, obj.__dict__[key].xpath)))
+                    elems = self.driver.find_elements_by_xpath(obj.__dict__[key].xpath)
+                    tmp = []
+                    for elem in elems:
+                        if obj.__dict__[key].data == 'text':
+                            data = elem.text
+
+                        else:
+                            data = elem.get_attribute(obj.__dict__[key].data)
+                        tmp.append(data)
+
+                    datadict[key] = tmp
+
+            res.append(datadict)
         return res
 
-
-    def save(self):
-        with open('123.txt','w') as f:
-            for d in self.l:
-                f.write(dumps(d,ensure_ascii=False))
 
 class Do(Job):
     pass
