@@ -1,7 +1,5 @@
 from core.classdef import Job,Field
-from core.funcdef import savexls as wt
-from core.funcdef import savejson as sj
-
+from core.funcdef import savexls,sav,savejson
 class Chef():
     wrap=Field('//div[@id="listContent"]/div')
     href=Field('//div[@class="contentpile__content__wrapper__item clearfix"]/a','href')
@@ -14,7 +12,7 @@ if __name__=='__main__':
     j1 = Job()
     l1 = j1.out(p1, Chef)
 
-    sj(l1,1)
+    sav(l1,1)
     i=2
     '''while(i<=10):
         p='https://sou.zhaopin.com/?p={}&jl=719&kw=%E5%8E%A8%E5%B8%88&kt=3&sf=0&st=0'.format(i)

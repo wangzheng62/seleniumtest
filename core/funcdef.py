@@ -1,4 +1,5 @@
 from openpyxl import Workbook
+from itertools import chain
 #function about excel
 def savexls(l,filename):
     # [{},{},{},{}]
@@ -11,9 +12,16 @@ def savexls(l,filename):
             tmp.append(s)
         ws.append(tmp)
     wb.save('{}.xlsx'.format(filename))
+def sav(l,filename):
+    # [{},{},{},{}]
+    wb = Workbook()
+    ws = wb.active
+    for i in chain.from_iterable(l):
+        print(i)
+
 import json
 def savejson(l,filename):
     # [{},{},{},{}]
-    with open("{}.json",'a',encoding='utf8') as f:
+    with open("{}.json".format(filename),'a',encoding='utf8') as f:
         for d in l:
             f.write(json.dumps(d))
