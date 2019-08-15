@@ -56,6 +56,8 @@ class Job():
 
                                 else:
                                     data = elem.get_attribute(obj.__dict__[key].data)
+                                    if data == None:
+                                        data=elem.get_property(obj.__dict__[key].data)
                                 tmp.append(data)
 
                             datadict[key]=tmp
