@@ -31,13 +31,13 @@ if __name__=='__main__':
     p01='https://sou.zhaopin.com/?jl=719&sf=0&st=0&kw=%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90&kt=3'
     p02='https://sou.zhaopin.com/?jl=719&sf=0&st=0&kw=%E8%B0%B7%E6%AD%8C&kt=3'
     j1 = Job()
-    l1 = j1.out(p01, Work)
-    res=[]
-    res=res+f(l1)
+    l1 = j1.out(p1, Work)
+
+    print(l1)
 
     i=2
 
-    while(i<=20):
+'''   while(i<=20):
         p='https://sou.zhaopin.com/?p={}&jl=719&sf=0&st=0&kw=%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90&kt=3'.format(i)
         j=Job()
         try:
@@ -46,5 +46,5 @@ if __name__=='__main__':
         except:
             break
         i=i+1
-    savexls(res,123)
+    savexls(res,123)'''
 

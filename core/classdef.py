@@ -16,7 +16,7 @@ class Job():
     def __init__(self):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-gpu")
+        #chrome_options.add_argument("--disable-gpu")
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
     def __del__(self):
         try:
