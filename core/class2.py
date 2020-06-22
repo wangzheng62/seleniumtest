@@ -6,7 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from json import dumps
-import os,re,random
+import os,re,random,urllib.request
 from time import sleep
 
 class Engine():
@@ -37,7 +37,7 @@ class Engine():
         res=self.driver.page_source
         return res
 
-    def __getddata(self,url,data):
+    def __gettext(self,url,data):
         self.driver.get(url)
         print(self.driver.current_url)
         res={}
@@ -55,9 +55,11 @@ class Engine():
             else:
                 res[key] = elem.get_attribute(data[key][1])
         return res
+    def __binarydata(self,url):
+        print('eee')
     def singleget(self,url,data):
         try:
-            con=self.__getddata(url,data)
+            con=self.__gettext(url,data)
             return con
         except Exception as e:
             print(e)
@@ -68,7 +70,7 @@ class Engine():
         n=0
         while True:
             print(n)
-            nexturl=yield self.__getddata(url,data)
+            nexturl=yield self.__gettext(url,data)
             url=nexturl
             n=n+1
     def recuv(self,url,data,func=print):
