@@ -7,13 +7,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from json import dumps
 import os,re,random
+from time import sleep
 
 class Engine():
-    def __init__(self):
+    def __init__(self,extension=None):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("load-extension=G:/Users/36357/AppData/Local/Google/Chrome/User Data/Default/Extensions/ldbcplcolkhgemejdgibfmhemnkecgni/8.10.8_0")
         #chrome_options.add_argument("--disable-gpu")
+        if extension:
+            chrome_options.add_extension(extension)
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        print("__init__")
     def __enter__(self):
         print('__enter__')
         return self
@@ -24,11 +29,26 @@ class Engine():
             self.driver.quit()
         except Exception as e:
             print(e)
+    def predo(self,fuc,*args,**kwargs):
+        fuc(*args,**kwargs)
+    def testurl(self,url):
+        self.driver.get(url)
+        sleep(20)
+        res=self.driver.page_source
+        return res
 
     def __getddata(self,url,data):
         self.driver.get(url)
+        print(self.driver.current_url)
         res={}
         for key in data:
+            try:
+                WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH,data[key][0])))
+            except Exception as e:
+                print(e)
+                if key=='next':
+                    res[key]=None
+                    return res
             elem = self.driver.find_element_by_xpath(data[key][0])
             if data[key][1] == 'text':
                 res[key] = elem.text
