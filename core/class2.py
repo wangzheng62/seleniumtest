@@ -12,8 +12,8 @@ from time import sleep
 class Engine():
     def __init__(self,extension=None):
         chrome_options = Options()
-        #chrome_options.add_argument("--headless")
-        chrome_options.add_argument("load-extension=G:/Users/36357/AppData/Local/Google/Chrome/User Data/Default/Extensions/ldbcplcolkhgemejdgibfmhemnkecgni/8.10.8_0")
+        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("load-extension=G:/Users/36357/AppData/Local/Google/Chrome/User Data/Default/Extensions/ldbcplcolkhgemejdgibfmhemnkecgni/8.10.8_0")
         #chrome_options.add_argument("--disable-gpu")
         if extension:
             chrome_options.add_extension(extension)
@@ -36,8 +36,7 @@ class Engine():
         sleep(20)
         res=self.driver.page_source
         return res
-
-    def __gettext(self,url,data):
+    def __getdata(self,url,data):
         self.driver.get(url)
         print(self.driver.current_url)
         res={}
@@ -55,11 +54,68 @@ class Engine():
             else:
                 res[key] = elem.get_attribute(data[key][1])
         return res
-    def __binarydata(self,url):
-        print('eee')
-    def singleget(self,url,data):
+    def __getalldata(self,url,data):
+        self.driver.get(url)
+        print(self.driver.current_url)
+        res={}
+        for key in data:
+            try:
+                WebDriverWait(self.driver,60).until(EC.presence_of_all_elements_located((By.XPATH,data[key][0])))
+            except Exception as e:
+                print(e)
+                if key=='next':
+                    res[key]=None
+                    return res
+            elems = self.driver.find_elements_by_xpath(data[key][0])
+            res[key]=[]
+            for elem in elems:
+                if data[key][1] == 'text':
+                    res[key].append(elem.text)
+                else:
+                    res[key].append(elem.get_attribute(data[key][1])) 
+        return res
+    def __binarydata(self,url,data):
+        self.driver.get(url)
+        print(self.driver.current_url)
+        res={}
+        for key in data:
+            try:
+                WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH,data[key][0])))
+            except Exception as e:
+                print(e)
+                if key=='next':
+                    res[key]=None
+                    return res
+            elem = self.driver.find_element_by_xpath(data[key][0])
+            if data[key][1] == 'text':
+                res[key] = elem.text
+            else:
+                res[key] = elem.get_attribute(data[key][1])
+        return res
+    def getpng(self,url,data):
+        self.driver.get(url)
+        sleep(100)
+        res={}
+        for key in data:
+            res[key]=[]
+            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH,data[key][0])))
+            elems = self.driver.find_elements_by_xpath(data[key][0])
+
+            for elem in elems:
+                res[key].append(elem.screenshot_as_png)
+
+        return res
+
+
+    def getone(self,url,data):
         try:
-            con=self.__gettext(url,data)
+            con=self.__getdata(url,data)
+            return con
+        except Exception as e:
+            print(e)
+    def getall(self,url,data):
+        try:
+            con=self.__getalldata(url,data)
             return con
         except Exception as e:
             print(e)
@@ -70,7 +126,7 @@ class Engine():
         n=0
         while True:
             print(n)
-            nexturl=yield self.__gettext(url,data)
+            nexturl=yield self.__getdata(url,data)
             url=nexturl
             n=n+1
     def recuv(self,url,data,func=print):
