@@ -13,6 +13,7 @@ class Engine():
     def __init__(self,extension=None):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920,1080")
         #chrome_options.add_argument("load-extension=G:/Users/36357/AppData/Local/Google/Chrome/User Data/Default/Extensions/ldbcplcolkhgemejdgibfmhemnkecgni/8.10.8_0")
         #chrome_options.add_argument("--disable-gpu")
         if extension:
@@ -94,7 +95,7 @@ class Engine():
         return res
     def getpng(self,url,data):
         self.driver.get(url)
-        sleep(100)
+        sleep(5)
         res={}
         for key in data:
             res[key]=[]
