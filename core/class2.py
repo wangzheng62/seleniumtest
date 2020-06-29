@@ -10,14 +10,16 @@ import os,re,random,urllib.request
 from time import sleep
 
 class Engine():
-    def __init__(self,extension=None):
+    def __init__(self,notgui=True,size=False,extension=None):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1920,1080")
-        #chrome_options.add_argument("load-extension=G:/Users/36357/AppData/Local/Google/Chrome/User Data/Default/Extensions/ldbcplcolkhgemejdgibfmhemnkecgni/8.10.8_0")
-        #chrome_options.add_argument("--disable-gpu")
-        if extension:
-            chrome_options.add_extension(extension)
+        if notgui:
+            chrome_options.add_argument("--headless")
+        if size:
+            chrome_options.add_argument(size)
+        if isinstance(extension,list) and extension!=[]:
+            for s in extension:
+                #chrome_options.add_argument("load-extension=G:/Users/36357/AppData/Local/Google/Chrome/User Data/Default/Extensions/ldbcplcolkhgemejdgibfmhemnkecgni/8.10.8_0")
+                chrome_options.add_argument("load-extension={}".format(s))
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
         print("__init__")
     def __enter__(self):
@@ -159,8 +161,8 @@ def save(con):
     title=ma(con['title'])
     with open(title+'.txt','ab') as f:
         f.write(con['content'].encode(errors='ignore'))
-def engine():
-    e=Engine()
+def engine(*args,**kwargs):
+    e=Engine(*args,**kwargs)
     return e
 if __name__=='__main__':
     pass
